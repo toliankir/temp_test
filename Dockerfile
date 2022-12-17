@@ -4,5 +4,5 @@ WORKDIR /app
 COPY . .
 RUN npm install
 RUN npx tsc --project tsconfig.json
-EXPOSE 3000
+EXPOSE 80
 CMD ["node", "app/app.js"]
