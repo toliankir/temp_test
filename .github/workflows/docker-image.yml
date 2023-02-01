@@ -30,6 +30,8 @@ jobs:
       if: env.APPLICAION_VERSION != ${{ github.ref }}
       run: |
         echo 'Incorrect version in tag and in package.json'
+        echo ${{ github.ref }}
+        echo env.APPLICAION_VERSION
         exit 1
       
     - name: Set up Docker Buildx
