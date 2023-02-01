@@ -26,11 +26,13 @@ jobs:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
     
     - name: Appliaction version condition
-      if: env.APPLICAION_VERSION != ${{ github.ref }}
       run: |
-        echo ${{ github.ref }}
-        echo ${{ steps.package-version.outputs.package-version }}
-        exit 1
+        if ["${{ github.ref }}" != "v${{ steps.package-version.outputs.package-version }}"]; then
+          echo "Wrong versions ${{github.ref}} v${{ steps.package-version.outputs.package-version }}"
+          exit 1
+        fi
+      env:
+        APPLICATION_VERSION: ${{ steps.package-version.outputs.package-version }}
       
     - name: Set up Docker Buildx
       uses: docker/setup-buildx-action@v1
