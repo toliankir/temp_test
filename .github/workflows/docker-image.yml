@@ -29,7 +29,7 @@ jobs:
     - name: Appliaction version condition
       if: env.APPLICAION_VERSION != 'abc'
       run: |
-        echo ${{ format('Incorrect version in tag - {0} and in package.json', ${{ env.APPLICAION_VERSION }}) }}
+        echo format('Incorrect version in tag - {0} and in package.json', ${{ env.APPLICAION_VERSION }})
         exit 1
       
     - name: Set up Docker Buildx
