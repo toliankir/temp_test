@@ -2,11 +2,8 @@ name: Docker Image CI
 
 on:
   push:
-#    tags:
-#    - 'v[0-9]+.[0-9]+.[0-9]+'
-    branches: [ "main" ]
-#  pull_request:
-#    branches: [ "main" ]
+    tags:
+    - 'v[0-9]+.[0-9]+.[0-9]+'
 
 jobs:
 
@@ -27,7 +24,7 @@ jobs:
     
     - name: Appliaction version condition
       run: |
-        if [ "${{github.ref}}" != "${{ steps.package-version.outputs.package-version }}" ]; then
+        if [ "${{ github.ref }}" != "${{ steps.package-version.outputs.package-version }}" ]; then
           echo "Wrong versions ${{github.ref}} ${{ steps.package-version.outputs.package-version }}"
           exit 1
         fi
@@ -47,7 +44,7 @@ jobs:
         context: ./
         file: ./Dockerfile
         push: true
-        tags: ${{ secrets.DOCKERHUB_USERNAME }}/temp-test:latest, ${{ secrets.DOCKERHUB_USERNAME }}/temp-test:${{ steps.package-version.outputs.package-version }}
+        tags: ${{ secrets.DOCKERHUB_USERNAME }}/temp-test:latest, ${{ secrets.DOCKERHUB_USERNAME }}/temp-test:${{ github.ref }}
 
 #    - name: Build the Docker image
 #      run: docker build . --file Dockerfile --tag my-image-name:$(date +%s)
