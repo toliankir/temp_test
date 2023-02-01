@@ -24,8 +24,8 @@ jobs:
     
     - name: Appliaction version condition
       run: |
-        if [ "${{ github.ref }}" != "${{ steps.package-version.outputs.package-version }}" ]; then
-          echo "Wrong versions ${{github.ref}} ${{ steps.package-version.outputs.package-version }}"
+        if [ "${{ github.ref_name }}" != "${{ steps.package-version.outputs.package-version }}" ]; then
+          echo "Wrong versions ${{github.ref_name}} ${{ steps.package-version.outputs.package-version }}"
           exit 1
         fi
    
@@ -44,7 +44,7 @@ jobs:
         context: ./
         file: ./Dockerfile
         push: true
-        tags: ${{ secrets.DOCKERHUB_USERNAME }}/temp-test:latest, ${{ secrets.DOCKERHUB_USERNAME }}/temp-test:${{ github.ref }}
+        tags: ${{ secrets.DOCKERHUB_USERNAME }}/temp-test:latest, ${{ secrets.DOCKERHUB_USERNAME }}/temp-test:${{ github.ref_name }}
 
 #    - name: Build the Docker image
 #      run: docker build . --file Dockerfile --tag my-image-name:$(date +%s)
