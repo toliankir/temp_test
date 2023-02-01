@@ -38,7 +38,7 @@ jobs:
         context: ./
         file: ./Dockerfile
         push: true
-        tags: ${{ secrets.DOCKERHUB_USERNAME }}/temp-test:latest
+        tags: ${{ secrets.DOCKERHUB_USERNAME }}/temp-test:latest, ${{ secrets.DOCKERHUB_USERNAME }}/temp-test:${{ steps.package-version.outputs.package-version }}
 
 #    - name: Build the Docker image
 #      run: docker build . --file Dockerfile --tag my-image-name:$(date +%s)
