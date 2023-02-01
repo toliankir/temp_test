@@ -23,7 +23,7 @@ jobs:
         APPLICAION_VERSION: format('v{0}', ${{ steps.package-version.outputs.package-version }})
     
     - name: Appliaction version condition
-      if: env.APPLICAION_VERSION != GITHUB_REF
+      if: env.APPLICAION_VERSION != ${{ GITHUB_REF }}
       run: echo 'Version ok'
 
     - uses: actions/checkout@v3
