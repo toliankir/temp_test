@@ -24,7 +24,6 @@ jobs:
       uses: koj-co/package-version-action@v1.0.1
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        APPLICAION_VERSION: format('v{0}', ${{ steps.package-version.outputs.package-version }})
     
     - name: Appliaction version condition
       if: env.APPLICAION_VERSION != ${{ github.ref }}
@@ -33,6 +32,8 @@ jobs:
         echo ${{ github.ref }}
         echo ${{ env.APPLICAION_VERSION }}
         exit 1
+      env:
+        APPLICAION_VERSION: format('v{0}', ${{ steps.package-version.outputs.package-version }})
       
     - name: Set up Docker Buildx
       uses: docker/setup-buildx-action@v1
