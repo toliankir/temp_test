@@ -27,10 +27,8 @@ jobs:
     
     - name: Appliaction version condition
       run: |
-        if ["${{ github.ref }}" != "${{ steps.package-version.outputs.package-version }}"]; then
-          echo "Wrong versions ${{github.ref}} v${{ steps.package-version.outputs.package-version }}"
-          exit 1
-        fi
+        echo "Wrong versions ${{github.ref}} v${{ steps.package-version.outputs.package-version }}"
+        exit 1
    
     - name: Set up Docker Buildx
       uses: docker/setup-buildx-action@v1
