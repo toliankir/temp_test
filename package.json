@@ -20,8 +20,8 @@
     "test:e2e": "jest --config ./test/jest-e2e.json",
     "typeorm": "npm run build && npx typeorm -d dist/database/datasource.js",
     "migration:create": "npx typeorm migration:create src/database/migrations/new",
-    "migration:run": "npm run typeorm -- migration:run",
-    "seed": "npm run build && npx ts-node ./node_modules/typeorm-extension/bin/cli.cjs seed:run -d src/database/datasource.ts"
+    "db:migration": "npm run typeorm -- migration:run",
+    "db:seed": "npm run build && npx ts-node ./node_modules/typeorm-extension/bin/cli.cjs seed:run -d src/database/datasource.ts"
   },
   "dependencies": {
     "@faker-js/faker": "^8.4.1",
