@@ -21,7 +21,7 @@ export default class PositionSeeder implements Seeder {
     await positionFactory.saveMany(5);
 
     const userFactory = factoryManager.get(UserEntity);
-    await userFactory.saveMany(40, {
+    await userFactory.saveMany(45, {
       tokenId: Math.trunc(Math.random() * 4) + 1,
       positionId: Math.trunc(Math.random() * 4) + 1,
     });

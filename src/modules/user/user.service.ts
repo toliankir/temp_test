@@ -24,7 +24,7 @@ export class UserService {
     this.tinifyApiKey = this.configService.get<string>('TINIFY_API_KEY');
   }
 
-  public async getUser(id: number): Promise<UserDtoResponse> {
+  public async getUser(id: number, ownAddr: URL): Promise<UserDtoResponse> {
     const userEntity = await this.userRepository.findOneOrFail({
       where: { id },
       relations: ['position'],
@@ -36,6 +36,7 @@ export class UserService {
       phone: userEntity.phone,
       position: userEntity.position.name,
       positionId: userEntity.position.id,
+      photo: this.getUserPhotoLink(ownAddr),
     };
   }
 
@@ -47,17 +48,14 @@ export class UserService {
   }
 
   public async getUsers(
-    paginationFilter: PaginationDtoRequest,
+    offset: number,
+    limit: number,
+    ownAddr: URL,
   ): Promise<UsersDtoResponse & { readonly count: number }> {
-    const skip: number =
-      paginationFilter.offset ||
-      (paginationFilter.page
-        ? 0
-        : (paginationFilter.page - 1) * paginationFilter.count);
-
+    console.log(offset, limit);
     const userEntities = await this.userRepository.find({
-      skip,
-      take: paginationFilter.count,
+      skip: offset,
+      take: limit,
       relations: ['position'],
     });
 
@@ -71,6 +69,7 @@ export class UserService {
         phone: e.phone,
         position: e.position.name,
         positionId: e.position.id,
+        photo: this.getUserPhotoLink(ownAddr, e.id),
       })),
       count,
     };
@@ -84,9 +83,9 @@ export class UserService {
     tinify.key = this.tinifyApiKey;
     const imageSource: Source = tinify.fromBuffer(fileBuffer);
     const resizedImage: Source = imageSource.resize({
-      method: 'fit',
-      width: 25,
-      height: 25,
+      method: 'cover',
+      width: 70,
+      height: 70,
     });
     const resizedImageBuffer: Buffer = Buffer.from(
       await resizedImage.toBuffer(),
@@ -103,5 +102,15 @@ export class UserService {
     const createdUser = await this.userRepository.save(newUserEntity);
 
     return createdUser.id;
+  }
+
+  private getUserPhotoLink(ownAddr: URL, userId?: number): string {
+    const pathParts = ownAddr.pathname.split('/');
+    if (userId) {
+      pathParts.push(userId.toString());
+    }
+    pathParts.push('image');
+
+    return new URL(pathParts.join('/'), ownAddr).toString();
   }
 }

@@ -5,5 +5,5 @@ export class UserDtoResponse {
   readonly phone: string;
   readonly position: string;
   readonly positionId: number;
-  // readonly photo: string;
+  readonly photo: string;
 }

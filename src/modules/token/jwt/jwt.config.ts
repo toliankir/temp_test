@@ -19,8 +19,6 @@ export class JwtConfig implements JwtOptionsFactory {
       secret: this.jwtSecret,
       signOptions: { expiresIn: `${this.jwtTtl}s` },
     };
-    console.log(result);
-
     return result;
   }
 }

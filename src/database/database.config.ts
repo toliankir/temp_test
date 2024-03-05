@@ -28,7 +28,7 @@ export class TypeOrmConfig implements TypeOrmOptionsFactory {
       username: this.connectionUrl.username,
       database: this.connectionUrl.pathname.split('/')[1],
       synchronize: false,
-      logging: true,
+      logging: !this.isProduction,
       schema: this.connectionUrl.searchParams.get('schema'),
       ssl: this.isProduction,
       entities: ['dist/database/entity/*.entity.js'],
