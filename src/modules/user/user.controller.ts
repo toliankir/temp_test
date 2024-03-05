@@ -30,7 +30,7 @@ import { GetAddressDecorator } from 'src/decorators/get-get-address.decorator';
 
 @Controller('users')
 export class UserController {
-  constructor(private readonly userService: UserService) { }
+  constructor(private readonly userService: UserService) {}
 
   @Get(':id')
   public async getUser(
