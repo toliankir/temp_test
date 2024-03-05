@@ -1,0 +1,20 @@
+{
+    "folders": [
+            {
+                    "name": "Backend",
+                    "path": "backend"
+            },
+            {
+                    "name": "Frontend",
+                    "path": "frontend"
+            },
+    ],
+    "settings": {
+            "files.autoSave": "afterDelay",
+            "files.autoSaveDelay": 3000,
+            "git.rebaseWhenSync": true,
+            "cSpell.words": [
+                    "worktree",
+            ]
+    }
+}
