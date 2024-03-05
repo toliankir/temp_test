@@ -7,6 +7,7 @@ export default setSeederFactory(UserEntity, (faker) => {
     name: faker.person.fullName(),
     email: faker.internet.email(),
     phone: faker.phone.number(),
+    photo: Buffer.from(''),
   };
 
   return position;

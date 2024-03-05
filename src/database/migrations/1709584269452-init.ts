@@ -3,20 +3,20 @@ import { MigrationInterface, QueryRunner } from 'typeorm';
 export class Init1709584269452 implements MigrationInterface {
   public async up(queryRunner: QueryRunner): Promise<void> {
     queryRunner.query(`
-    CREATE TABLE "position" (
+    CREATE TABLE IF NOT EXISTS "position" (
         "id" SERIAL PRIMARY KEY,
         "name" VARCHAR(60) NOT NULL,
         "utc_created_at" TIMESTAMP WITHOUT TIME ZONE NOT NULL DEFAULT (now() AT TIME ZONE 'utc')
     );
     
-    CREATE TABLE "token" (
+    CREATE TABLE IF NOT EXISTS "token" (
         "id" SERIAL PRIMARY KEY,
         "uuid" UUID NOT NULL,
         "utc_created_at" TIMESTAMP WITHOUT TIME ZONE NOT NULL DEFAULT (now() AT TIME ZONE 'utc'),
         "is_used" BOOLEAN DEFAULT FALSE    
     );
 
-    CREATE TABLE "user" (
+    CREATE TABLE IF NOT EXISTS "user" (
         "id" SERIAL PRIMARY KEY,
         "position_id" INT NOT NULL,
         "token_id" INT NOT NULL,
