@@ -80,7 +80,7 @@ export class UserController {
 
     const nextUrl =
       offset + paginationFilter.count < count
-        ? paginationFilter.offset
+        ? paginationFilter.offset !== undefined
           ? this.getUserPageLink(ownAddr, {
               offset: paginationFilter.offset + paginationFilter.count,
             })
@@ -93,11 +93,11 @@ export class UserController {
       }
 
       if (offset - paginationFilter.count < 0) {
-        return paginationFilter.offset
+        return paginationFilter.offset !== undefined
           ? this.getUserPageLink(ownAddr, { offset: 0 })
           : this.getUserPageLink(ownAddr, { page: 0 });
       } else {
-        return paginationFilter.offset
+        return paginationFilter.offset !== undefined
           ? this.getUserPageLink(ownAddr, {
               offset: paginationFilter.offset - paginationFilter.count,
             })
