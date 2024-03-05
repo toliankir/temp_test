@@ -1,0 +1,11 @@
+{
+    "sqltools.connections": [
+        {
+            "previewLimit": 50,
+            "server": "localhost",
+            "driver": "PostgreSQL",
+            "name": "test",
+            "connectString": "postgres://postgres:@127.0.0.1:53111/devdb?schema=public"
+        }
+    ]
+}
