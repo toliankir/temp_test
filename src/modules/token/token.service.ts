@@ -4,6 +4,7 @@ import { DeepPartial, Repository } from 'typeorm';
 import { randomUUID } from 'crypto';
 import { JwtService } from '@nestjs/jwt';
 import { TokenEntity } from '../../database/entity/token.entity';
+import { TokenModel } from '../../types';
 
 @Injectable()
 export class TokenService {
@@ -23,7 +24,7 @@ export class TokenService {
     return this.jwtService.signAsync(payload);
   }
 
-  public async isTokenUserToken(uuid: string): Promise<boolean> {
+  public async isTokenUsed(uuid: string): Promise<boolean> {
     const tokenEntity = await this.tokenRepository.findOneOrFail({
       where: {
         uuid,
@@ -32,7 +33,21 @@ export class TokenService {
     return tokenEntity.isUsed;
   }
 
-  public async updateToken(uuid: string) {
-    this.tokenRepository.update({ uuid }, { isUsed: true });
+  public async getTokenModel(uuid: string): Promise<TokenModel> {
+    const tokenEntity = await this.tokenRepository.findOneOrFail({
+      where: {
+        uuid,
+      },
+    });
+    return {
+      id: tokenEntity.id,
+      uuid: tokenEntity.uuid,
+      createdAt: tokenEntity.createdAt,
+      isUsed: tokenEntity.isUsed,
+    };
+  }
+
+  public async updateToken(uuid: string): Promise<void> {
+    await this.tokenRepository.update({ uuid }, { isUsed: true });
   }
 }

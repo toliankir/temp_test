@@ -44,7 +44,7 @@ export class AuthGuard implements CanActivate {
         throw new Error(errorMsg);
       }
 
-      const isTokenUsed = await this.tokenService.isTokenUserToken(tokenUuid);
+      const isTokenUsed = await this.tokenService.isTokenUsed(tokenUuid);
       if (isTokenUsed) {
         const errorMsg = `Token ${payload.id} already used`;
         this.logger.verbose(errorMsg);
@@ -52,6 +52,9 @@ export class AuthGuard implements CanActivate {
       }
 
       await this.tokenService.updateToken(tokenUuid);
+
+      const tokenModel = await this.tokenService.getTokenModel(tokenUuid);
+      request['tokenModel'] = tokenModel;
     } catch {
       throw new UnauthorizedException();
     }

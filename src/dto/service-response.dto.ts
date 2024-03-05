@@ -12,6 +12,6 @@ export interface ServiceResponseFail extends ResponseMain {
   readonly fails?: unknown;
 }
 
-export type ServiceResponse<T extends object> =
+export type ServiceResponseDto<T extends object> =
   | (ServiceResponseSuccess & T)
   | ServiceResponseFail;

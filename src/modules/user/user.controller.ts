@@ -2,14 +2,17 @@ import {
   Body,
   Controller,
   Get,
+  Header,
   Param,
   Post,
   Query,
+  StreamableFile,
   UploadedFile,
+  UseGuards,
   UseInterceptors,
 } from '@nestjs/common';
 import { UserService } from './user.service';
-import { ServiceResponse } from '../../types/service-response';
+import { ServiceResponseDto } from '../../dto/service-response.dto';
 import { FileInterceptor } from '@nestjs/platform-express';
 import {
   UserDtoRequest,
@@ -18,7 +21,11 @@ import {
   PaginationDtoResponse,
   SingleUserDtoResponse,
   UserCreateDtoRequest,
+  UserCreateDtoResponse,
 } from '../../dto';
+import { AuthGuard } from '../../guards/token.guard';
+import { GetTokenModel } from '../../decorators/get-token-model.decorator';
+import { TokenModel } from '../../types';
 
 @Controller('users')
 export class UserController {
@@ -27,17 +34,26 @@ export class UserController {
   @Get(':id')
   public async getUser(
     @Param() user: UserDtoRequest,
-  ): Promise<ServiceResponse<SingleUserDtoResponse>> {
+  ): Promise<ServiceResponseDto<SingleUserDtoResponse>> {
     return {
       success: true,
       user: await this.userService.getUser(user.id),
     };
   }
 
+  @Get('image/:id')
+  @Header('Content-Type', 'image/jpeg')
+  public async getUserImage(
+    @Param() user: UserDtoRequest,
+  ): Promise<StreamableFile> {
+    const imageBuffer: Buffer = await this.userService.getUserImage(user.id);
+    return new StreamableFile(imageBuffer);
+  }
+
   @Get()
   public async getUsers(
     @Query() paginationFilter: PaginationDtoRequest,
-  ): Promise<ServiceResponse<UsersDtoResponse & PaginationDtoResponse>> {
+  ): Promise<ServiceResponseDto<UsersDtoResponse & PaginationDtoResponse>> {
     const { users, count } = await this.userService.getUsers(paginationFilter);
     return {
       success: true,
@@ -58,15 +74,24 @@ export class UserController {
     };
   }
 
-  // @UseGuards(AuthGuard)
+  @UseGuards(AuthGuard)
   @Post()
   @UseInterceptors(FileInterceptor('file'))
   public async saveUser(
     @UploadedFile() file,
     @Body() body: UserCreateDtoRequest,
-  ): Promise<any> {
-    console.log(file);
-    console.log(body);
-    // return await this.userService.getUser();
+    @GetTokenModel() tokenModel: TokenModel,
+  ): Promise<ServiceResponseDto<UserCreateDtoResponse>> {
+    const userId = await this.userService.saveUser(
+      body,
+      file.buffer,
+      tokenModel.id,
+    );
+
+    return {
+      success: true,
+      message: 'New user successfully registered',
+      userId,
+    };
   }
 }

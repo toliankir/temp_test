@@ -3,15 +3,19 @@ import {
   Catch,
   ExceptionFilter,
   HttpException,
+  Logger,
   NotFoundException,
   UnprocessableEntityException,
 } from '@nestjs/common';
 import { Response } from 'express';
-import { ServiceResponseFail } from '../types/service-response';
+import { ServiceResponseFail } from '../dto/service-response.dto';
 
 @Catch(HttpException)
 export class CustomExceptionFilter implements ExceptionFilter {
   catch(exception: HttpException, host: ArgumentsHost) {
+    const logger = new Logger(HttpException.name);
+    logger.error(exception.message);
+
     const ctx = host.switchToHttp();
     const response = ctx.getResponse<Response>();
     const status = exception.getStatus();

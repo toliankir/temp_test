@@ -31,8 +31,8 @@ export class UserEntity {
   @Column({ name: 'phone' })
   public readonly phone!: string;
 
-  // @Column({ name: 'photo' })
-  // public readonly photo!: Buffer;
+  @Column({ name: 'photo', type: 'bytea' })
+  public readonly photo!: Buffer;
 
   @ManyToOne(() => PositionEntity)
   @JoinColumn([{ name: 'position_id', referencedColumnName: 'id' }])

@@ -24,7 +24,7 @@ export class Init1709584269452 implements MigrationInterface {
         "email" VARCHAR(100) NOT NULL,
         "phone" VARCHAR(32) NOT NULL,
         "utc_created_at" TIMESTAMP WITHOUT TIME ZONE NOT NULL DEFAULT (now() AT TIME ZONE 'utc'),
-        "photo" BYTEA,
+        "photo" BYTEA NOT NULL,
     CONSTRAINT "uq__user__email" UNIQUE ("email"),
     CONSTRAINT "uq__user__phone" UNIQUE ("phone"),
     CONSTRAINT "fk__user__position" FOREIGN KEY ("position_id") REFERENCES "position" ("id"),
