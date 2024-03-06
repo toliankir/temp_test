@@ -143,11 +143,11 @@
       users: [],
       totalUsers: 0,
       userNextUrl: null,
-      position: 1,
+      position: null,
       files: [],
-      userName: 'Anatolii Vasyliev',
-      userEmail: 'test@mail.com',
-      userPhone: "380661234023",
+      userName: null,
+      userEmail: null,
+      userPhone: null,
       async addUser() {
         if (!this.userName || !this.userEmail || !this.userPhone || !this.position || this.files.length !== 1) {
           console.error("Fill all fields");
