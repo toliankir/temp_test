@@ -8,6 +8,10 @@
                     "name": "Frontend",
                     "path": "frontend"
             },
+            {
+                    "name": "Task",
+                    "path": "task"
+            },
     ],
     "settings": {
             "files.autoSave": "afterDelay",

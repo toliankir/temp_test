@@ -1,5 +1,6 @@
 frontend
 backend
+task
 .vscode
 
 *.local*
