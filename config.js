@@ -1,6 +1,6 @@
 module.exports = {
     "ui": {
-        "port": 3001,
+        "port": 3011,
         "weinre": {
             "port": 8080
         }
@@ -13,5 +13,5 @@ module.exports = {
         "change"
     ],
     reloadOnRestart: true,
-    "port": 3000
+    "port": 3010
 };
