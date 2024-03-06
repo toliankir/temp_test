@@ -11,6 +11,10 @@ export class TypeOrmConfig implements TypeOrmOptionsFactory {
     const connectionString = this.configService.get<string>('POSTGRES_CONNECTION_STRING');
     const mode = this.configService.get<string>('MODE');
 
+    if (!connectionString) {
+      throw new Error('Miscofiguration POSTGRES_CONNECTION_STRING must be set');
+    }
+
     this.production = mode === 'PROD';
     this.connectionUrl = new URL(connectionString);
   }
@@ -28,7 +32,7 @@ export class TypeOrmConfig implements TypeOrmOptionsFactory {
       username: this.connectionUrl.username,
       database: this.connectionUrl.pathname.split('/')[1],
       synchronize: false,
-      logging: !this.isProduction,
+      logging: false,
       schema: this.connectionUrl.searchParams.get('schema'),
       ssl: this.isProduction,
       entities: ['dist/database/entity/*.entity.js'],

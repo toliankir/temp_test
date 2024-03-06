@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { ConflictException, Injectable } from '@nestjs/common';
 import { UserEntity } from '../../database/entity/user.entity';
 import { DeepPartial, Repository } from 'typeorm';
 import { InjectRepository } from '@nestjs/typeorm';
@@ -21,7 +21,12 @@ export class UserService {
     private readonly userRepository: Repository<UserEntity>,
     private readonly configService: ConfigService,
   ) {
-    this.tinifyApiKey = this.configService.get<string>('TINIFY_API_KEY');
+    const tinifyApiKey = this.configService.get<string>('TINIFY_API_KEY');
+
+    if (!tinifyApiKey) {
+      throw new Error('Miscofiguration TINIFY_API_KEY must be set');
+    }
+    this.tinifyApiKey = tinifyApiKey;
   }
 
   public async getUser(id: number, ownAddr: URL): Promise<UserDtoResponse> {
@@ -57,6 +62,7 @@ export class UserService {
       skip: offset,
       take: limit,
       relations: ['position'],
+      order: { id: 'desc' },
     });
 
     const count: number = await this.userRepository.count();
@@ -80,6 +86,16 @@ export class UserService {
     fileBuffer: Buffer,
     tokenId: number,
   ): Promise<number> {
+    const existingUserEntity = await this.userRepository.findOne({
+      where: [{ email: user.email }, { phone: user.phone }],
+    });
+
+    if (existingUserEntity) {
+      throw new ConflictException(
+        'User with this phone or email already exist',
+      );
+    }
+
     tinify.key = this.tinifyApiKey;
     const imageSource: Source = tinify.fromBuffer(fileBuffer);
     const resizedImage: Source = imageSource.resize({

@@ -1,4 +1,5 @@
 import {
+  BadRequestException,
   Body,
   Controller,
   Get,
@@ -30,6 +31,9 @@ import { GetAddressDecorator } from 'src/decorators/get-get-address.decorator';
 
 @Controller('users')
 export class UserController {
+  private static MAX_FILE_SIZE = 5000000;
+  private static ALLOWED_FILE_TYPES = ['image/jpeg'];
+
   constructor(private readonly userService: UserService) {}
 
   @Get(':id')
@@ -121,15 +125,31 @@ export class UserController {
 
   @UseGuards(AuthGuard)
   @Post()
-  @UseInterceptors(FileInterceptor('file'))
+  @UseInterceptors(FileInterceptor('photo'))
   public async saveUser(
-    @UploadedFile() file,
+    @UploadedFile() photo: Express.Multer.File,
     @Body() body: UserCreateDtoRequest,
     @GetTokenModel() tokenModel: TokenModel,
   ): Promise<ServiceResponseDto<UserCreateDtoResponse>> {
+    if (!photo || Array.isArray(photo)) {
+      throw new BadRequestException();
+    }
+
+    if (photo.size > UserController.MAX_FILE_SIZE) {
+      throw new BadRequestException(
+        `Maximum file size - ${UserController.MAX_FILE_SIZE} bytes`,
+      );
+    }
+
+    if (!UserController.ALLOWED_FILE_TYPES.includes(photo.mimetype)) {
+      throw new BadRequestException(
+        `Allowed file types - ${UserController.ALLOWED_FILE_TYPES.join(',')}`,
+      );
+    }
+
     const userId = await this.userService.saveUser(
       body,
-      file.buffer,
+      photo.buffer,
       tokenModel.id,
     );
 

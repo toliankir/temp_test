@@ -8,9 +8,18 @@ export class JwtConfig implements JwtOptionsFactory {
   private readonly jwtTtl: number;
 
   constructor(private readonly configService: ConfigService) {
-    this.jwtSecret = this.configService.get<string>('JWT_SECRET');
-    this.jwtTtl =
-      parseInt(this.configService.get<string>('JWT_TTL_MINUTES'), 10) * 60;
+    const jwtSecret = this.configService.get<string>('JWT_SECRET');
+    const jwtTtl = this.configService.get<string>('JWT_TTL_MINUTES');
+
+    if (!jwtSecret) {
+      throw new Error('Miscofiguration JWT_SECRET must be set');
+    }
+    if (!jwtTtl) {
+      throw new Error('Miscofiguration JWT_TTL_MINUTES must be set');
+    }
+
+    this.jwtSecret = jwtSecret;
+    this.jwtTtl = parseInt(jwtTtl, 10) * 60;
   }
 
   createJwtOptions(): JwtModuleOptions | Promise<JwtModuleOptions> {

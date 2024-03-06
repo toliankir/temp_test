@@ -14,7 +14,7 @@ import { ServiceResponseFail } from '../dto/service-response.dto';
 export class CustomExceptionFilter implements ExceptionFilter {
   catch(exception: HttpException, host: ArgumentsHost) {
     const logger = new Logger(HttpException.name);
-    logger.error(exception.message);
+    logger.verbose(exception);
 
     const ctx = host.switchToHttp();
     const response = ctx.getResponse<Response>();
@@ -32,6 +32,12 @@ export class CustomExceptionFilter implements ExceptionFilter {
           success: false,
           message: exception.getResponse()['message'] || 'Unprocessable Entity',
           fails: exception.getResponse()['fails'],
+        };
+      }
+      if (status < 500) {
+        return {
+          success: false,
+          message: exception.message,
         };
       }
       return {
