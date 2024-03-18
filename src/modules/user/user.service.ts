@@ -57,7 +57,6 @@ export class UserService {
     limit: number,
     ownAddr: URL,
   ): Promise<UsersDtoResponse & { readonly count: number }> {
-    console.log(offset, limit);
     const userEntities = await this.userRepository.find({
       skip: offset,
       take: limit,
